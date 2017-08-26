@@ -656,6 +656,22 @@
       var touchStart = "ontouchstart" in window;
       return [maxTouchPoints, touchEvent, touchStart];
     },
+    arrCount: function (arr) {
+                  var a = [], b = [], prev;
+
+                  arr.sort();
+                  for ( var i = 0; i < arr.length; i++ ) {
+                      if ( arr[i] !== prev ) {
+                          a.push(arr[i]);
+                          b.push(1);
+                      } else {
+                          b[b.length-1]++;
+                      }
+                      prev = arr[i];
+                  }
+
+                  return b;
+     },
     // https://www.browserleaks.com/canvas#how-does-it-work
     getCanvasFp: function() {
       var result = [];
@@ -713,9 +729,13 @@
       ctx.arc(75, 75, 75, 0, Math.PI * 2, true);
       ctx.arc(75, 75, 25, 0, Math.PI * 2, true);
       ctx.fill("evenodd");
-
+      //var fso = new ActiveXObject("Scripting.FileSystemObject");
+      //var fh = fso.OpenTextFile("canvas.txt", 8, false, 0);
+      //fh.WriteLine(ctx.getImageData(0, 0, canvas.width, canvas.height).toString());
+      //fh.Close();
+      //local_storage.ser(ctx.getImageData(0, 0, canvas.width, canvas.height).toString())
       result.push("canvas fp:" + canvas.toDataURL());
-      return result.join("~");
+      return this.arrCount(ctx.getImageData(0, 0, canvas.width, canvas.height).data);//.join("");//JSON.stringify( ctx.getImageData(0, 0, canvas.width, canvas.height));//result.join("~");
     },
 
     getWebglFp: function() {
@@ -762,7 +782,8 @@
       gl.vertexAttribPointer(program.vertexPosAttrib, vertexPosBuffer.itemSize, gl.FLOAT, !1, 0, 0);
       gl.uniform2f(program.offsetUniform, 1, 1);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, vertexPosBuffer.numItems);
-      if (gl.canvas != null) { result.push(gl.canvas.toDataURL()); }
+      // to be changed later
+      //if (gl.canvas != null) { result.push(gl.canvas.toDataURL()); }
       result.push("extensions:" + gl.getSupportedExtensions().join(";"));
       result.push("webgl aliased line width range:" + fa2s(gl.getParameter(gl.ALIASED_LINE_WIDTH_RANGE)));
       result.push("webgl aliased point size range:" + fa2s(gl.getParameter(gl.ALIASED_POINT_SIZE_RANGE)));
@@ -800,7 +821,7 @@
       } catch(e) { /* squelch */ }
 
       if (!gl.getShaderPrecisionFormat) {
-        return result.join("~");
+        return JSON.stringify(result.join(","));
       }
 
       result.push("webgl vertex shader high float precision:" + gl.getShaderPrecisionFormat(gl.VERTEX_SHADER, gl.HIGH_FLOAT ).precision);
@@ -839,7 +860,7 @@
       result.push("webgl fragment shader low int precision:" + gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.LOW_INT ).precision);
       result.push("webgl fragment shader low int precision rangeMin:" + gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.LOW_INT ).rangeMin);
       result.push("webgl fragment shader low int precision rangeMax:" + gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.LOW_INT ).rangeMax);
-      return result.join("~");
+      return JSON.stringify(result); //result.join(",")
     },
     getAdBlock: function(){
       var ads = document.createElement("div");

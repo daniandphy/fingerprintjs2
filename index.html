@@ -92,7 +92,7 @@
           for (var index in components) {
             var obj = components[index];
             var value = obj.value;
-            var line = obj.key + " = " + value.toString().substr(0, 100);
+            var line = obj.key + " = " + value.toString().substr(0, 2000);
             console.log(line);
             details += line + "<br />";
           }
@@ -103,5 +103,53 @@
       });
     });
   </script>
+  <button id="save-canvas">Save canvas fingerprint</button>
+  <script src="FileSaver.js"></script>
+  <script>
+    $("#save-canvas").on("click", function () {
+
+      var fp = new Fingerprint2();
+      fp.get(function(result, components){
+        for (var index in components) {
+          var obj = components[index];
+          if (obj.key=="canvas"){
+            //console.log(obj.value.toString());
+            var val = obj.value;
+
+          }
+        }
+        var date = new Date().toISOString().replace(/T/, "_").    // replace T with a '_'
+             replace(/\..+/, '') ;  // delete the dot and everything after
+
+        var blob = new Blob([val.toString()], {type: "text/plain;charset=utf-8"});
+        saveAs(blob, "canvasFP_"+date+".txt");
+      });
+    });
+  </script>
+  </script>
+  <button id="save-webgl">Save webgl fingerprint</button>
+  <script src="FileSaver.js"></script>
+  <script>
+    $("#save-webgl").on("click", function () {
+
+      var fp = new Fingerprint2();
+      fp.get(function(result, components){
+        for (var index in components) {
+          var obj = components[index];
+          if (obj.key=="webgl"){
+            //console.log(obj.value.toString());
+            var val = obj.value;
+
+          }
+        }
+        var date = new Date().toISOString().replace(/T/, "_").    // replace T with a '_'
+             replace(/\..+/, '') ;  // delete the dot and everything after
+
+        var blob = new Blob([val.toString()], {type: "text/plain;charset=utf-8"});
+        saveAs(blob, "webglFP_"+date+".txt");
+      });
+    });
+  </script>
+
 </body>
 </html>
