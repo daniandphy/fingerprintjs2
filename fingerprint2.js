@@ -670,7 +670,7 @@
                       prev = arr[i];
                   }
 
-                  return b;
+                  return [a,b];
      },
     // https://www.browserleaks.com/canvas#how-does-it-work
     getCanvasFp: function() {
