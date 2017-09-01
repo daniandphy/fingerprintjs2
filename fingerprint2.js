@@ -734,7 +734,7 @@
       //fh.WriteLine(ctx.getImageData(0, 0, canvas.width, canvas.height).toString());
       //fh.Close();
       //local_storage.ser(ctx.getImageData(0, 0, canvas.width, canvas.height).toString())
-      result.push("canvas fp:" + canvas.toDataURL());
+      //console.log(canvas.toDataURL());
       return this.arrCount(ctx.getImageData(0, 0, canvas.width, canvas.height).data);//.join("");//JSON.stringify( ctx.getImageData(0, 0, canvas.width, canvas.height));//result.join("~");
     },
 
@@ -783,7 +783,16 @@
       gl.uniform2f(program.offsetUniform, 1, 1);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, vertexPosBuffer.numItems);
       // to be changed later
-      //if (gl.canvas != null) { result.push(gl.canvas.toDataURL()); }
+
+      //console.log(gl.canvas.toDataURL());
+      //console.log([gl.canvas.width, gl.canvas.height])
+      //
+      if (gl.canvas != null) {
+      var pixels = new Uint8Array(gl.drawingBufferWidth * gl.drawingBufferHeight * 4);
+      gl.readPixels(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+      result.push("canv_context:"+  this.arrCount(pixels));
+      }
+       //{result.push(gl.canvas.toDataURL()); } //{result.push(getImageData(0, 0, gl.canvas.width, gl.canvas.height).data);}
       result.push("extensions:" + gl.getSupportedExtensions().join(";"));
       result.push("webgl aliased line width range:" + fa2s(gl.getParameter(gl.ALIASED_LINE_WIDTH_RANGE)));
       result.push("webgl aliased point size range:" + fa2s(gl.getParameter(gl.ALIASED_POINT_SIZE_RANGE)));
